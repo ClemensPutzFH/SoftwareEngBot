@@ -2,11 +2,12 @@
 name = "repl_python3_SoftwareEngBot"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Clemens, Bernhard, Julian, Aaron"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
 discord = "^1.7.3"
+pytz = "^2021.3"
 
 [tool.poetry.dev-dependencies]
 

@@ -28,7 +28,10 @@ async def on_message(message):
         return
 #WeatherBot gets his message
     msg = message.content
-    weatherAPI.get_weather(msg[:9])
+
+    if message.content.startswith('!weather'):
+      ret = weatherAPI.get_weather(msg[9:])
+      await message.channel.send(embed=ret)
     
     if message.content.startswith('!inspire'):
         quote = get_quote()
@@ -53,26 +56,25 @@ async def on_message(message):
         await message.channel.send(
             'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 
-#    if message.content.startswith('!send'):
-#        await message.channel.send('Clemens Bot stinkt!')
-
     if message.content.startswith('!xmas'):
         await message.channel.send(
             'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 
     if message.content.startswith('!diss'):
         msg = msg[6:]
-        rng = randint(0,4)
+        rng = randint(0,5)
         if rng == 0:
           await message.channel.send(msg + ' stinkt!')
         if rng == 1:
           await message.channel.send(msg + ' ist ein doofer Pupskopf!')
         if rng == 2:
-          await message.channel.send(msg + ' stinkt untenrum!')
+          await message.channel.send(msg + ' hat Käsefüße!')
         if rng == 3:
-          await message.channel.send(msg + ' hat üblen Mundgeruch!')
+          await message.channel.send(msg + ' hat Mundgeruch!')
         if rng == 4:
           await message.channel.send('Keiner mag ' + msg + '!')
+        if rng == 5:
+          await message.channel.send(message.author + ' fallen wohl selbst keine Beleidigungen ein. Luschi!')
 
 my_secret = os.environ['tokenBot']
 client.run(my_secret)
