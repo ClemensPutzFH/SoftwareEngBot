@@ -8,6 +8,6 @@ class MessageProvider:
   def removeMessageHandler(self, messageHandler):
     self.messageHandlerList.remove(messageHandler)
 
-  def provideMessage(self, message):
+  async def provideMessage(self, message):
     for handler in self.messageHandlerList:
-      handler.onMessage(message)
+      await handler.onMessage(message)

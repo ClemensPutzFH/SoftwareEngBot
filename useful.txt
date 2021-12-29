@@ -1,0 +1,40 @@
+In case of too many API Calls
+https://replit.com/talk/ask/Discord-Bot-How-to-fix-429-rate-limit-error/121289
+
+
+
+  
+  # aus dem main entfernt
+
+  msg = message.content
+  
+  if message.content.startswith('!Julian'):
+      await message.channel.send(
+          'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+      await message.channel.send('<3')
+      
+  if message.content.startswith('!Aaron'):
+      await message.channel.send(
+          'https://www.youtube.com/watch?v=dQw4w9WgXfQ')
+      await message.channel.send('<3')
+
+  if message.content.startswith('!Clemens'):
+      await message.channel.send(
+          'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+      await message.channel.send('<3')
+
+  if message.content.startswith('!diss'):
+      msg = msg[6:]
+      rng = randint(0,5)
+      if rng == 0:
+        await message.channel.send(msg + ' stinkt!')
+      if rng == 1:
+        await message.channel.send(msg + ' ist ein doofer Pupskopf!')
+      if rng == 2:
+        await message.channel.send(msg + ' hat Käsefüße!')
+      if rng == 3:
+        await message.channel.send(msg + ' hat Mundgeruch!')
+      if rng == 4:
+        await message.channel.send('Keiner mag ' + msg + '!')
+      if rng == 5:
+        await message.channel.send(message.author + ' fallen wohl selbst keine Beleidigungen ein. Luschi!')

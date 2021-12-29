@@ -8,6 +8,8 @@ authors = ["Clemens, Bernhard, Julian, Aaron"]
 python = "^3.8"
 discord = "^1.7.3"
 pytz = "^2021.3"
+emoji = "^1.6.1"
+youtube_dl = "^2021.12.17"
 
 [tool.poetry.dev-dependencies]
 
