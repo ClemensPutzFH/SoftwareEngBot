@@ -1,11 +1,16 @@
 import MessageHandler
 import discord
 import datetime
+import threading as th
+import asyncio
 
 class ReminderHandler(MessageHandler.MessageHandler):
   def __init__(self):
     self.userReminderSetup = []
     self.userReminderList = []
+    self.loop = asyncio.new_event_loop()
+    self.loop.create_task(self.checkDate)
+    self.loop.run_forever()
 
   async def onMessage(self, message):
     await self.reminder_save_date(message)
@@ -15,7 +20,8 @@ class ReminderHandler(MessageHandler.MessageHandler):
       print("Today's date:", today)
       embed=discord.Embed(title="Missing message", color=0xbe8eb4)
       embed.add_field(name="Error", value="You have not specified a reminder message :cry:", inline=True)
-      return embed
+      await message.channel.send(embed = embed)
+      return
       
     elif message.content.startswith('!remindme'):
       await self.reminder_setting_msg(message)
@@ -44,6 +50,7 @@ class ReminderHandler(MessageHandler.MessageHandler):
           reminddate = datetime.datetime.fromisoformat(msg.content)
         except:
           embed=discord.Embed(title="Wrong date format", color=0xbe8eb4)
+          embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/1792/1792931.png')
           embed.add_field(name="Error", value="The date you have given isn't formatted correctly :cry:", inline=True)
           await msg.channel.send(embed=embed)
           return
@@ -51,9 +58,31 @@ class ReminderHandler(MessageHandler.MessageHandler):
         # subtract given time from current time -> creates timedelta object -> check if result is negative
         if (reminddate - (datetime.datetime.utcnow() + datetime.timedelta(hours=timezone_offset))).total_seconds() < 0:
           embed=discord.Embed(title="Reminder is in the past", color=0xbe8eb4)
+          embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/1792/1792931.png')
           embed.add_field(name="Error", value="The date you have given is in the past :cry:", inline=True)
           await msg.channel.send(embed=embed)
           return
         
-        self.userReminderList.append([msg.author.id, reminddate, i[1]])
+        self.userReminderList.append([msg.author, reminddate, i[1]])
         self.userReminderSetup.remove([i[0], i[1]])
+
+        embed=discord.Embed(title="Reminder set", color=0xbe8eb4)
+        embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/1792/1792931.png')
+        embed.add_field(name="Forget it", value="You will be reminded anyway :)", inline=True)
+        await msg.channel.send(embed=embed)
+  
+  async def checkDate(self):
+    await asyncio.sleep(1)
+    print("timer executed")
+    timezone_offset = 1
+    for i in self.userReminderList:
+      if (i[1] - (datetime.datetime.utcnow() + datetime.timedelta(hours=timezone_offset))).total_seconds() <= 0:
+        embed=discord.Embed(title="Reminder", color=0xbe8eb4)
+        embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/1792/1792931.png')
+        embed.add_field(name="Message", value=i[2], inline=True)
+        await i[0].send(embed=embed)
+
+class RepeatTimer(th.Timer):  
+    def run(self):  
+        while not self.finished.wait(self.interval):  
+            self.function(*self.args,**self.kwargs)
