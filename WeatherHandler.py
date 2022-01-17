@@ -60,7 +60,7 @@ class WeatherHandler(MessageHandler.MessageHandler):
 
   def weather_settings(self, msg):
     self.userChangeSettings.append(msg.author.id);
-    print(self.userChangeSettings);
+    #print(self.userChangeSettings);
     
     embed=discord.Embed(title=f"{msg.author.name}, please enter your default location for weather updates", color=0x14aaeb)
     embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/975/975660.png')
@@ -75,7 +75,7 @@ class WeatherHandler(MessageHandler.MessageHandler):
         msgstring = msg.content
 
       self.userLocationSettings.update({msg.author.id: msgstring});
-      print(self.userLocationSettings)
+      #print(self.userLocationSettings)
       embed=discord.Embed(title=f"{msg.author.name}, your default location was set to " + str(self.userLocationSettings.get(msg.author.id)), color=0x14aaeb)
       self.userChangeSettings.remove(msg.author.id)
       await msg.channel.send(embed=embed)

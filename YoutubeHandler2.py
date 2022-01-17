@@ -104,3 +104,6 @@ async def clear(ctx, amount=5):
     await ctx.send("Messages have been cleared")
 
 """""
+
+
+#https://github.com/eric-yeung/Discord-Bot/blob/master/main.py

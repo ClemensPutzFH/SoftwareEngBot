@@ -1,16 +1,13 @@
 import MessageHandler
 import discord
 import datetime
-import threading as th
 import asyncio
 
 class ReminderHandler(MessageHandler.MessageHandler):
-  def __init__(self):
+  def __init__(self, client):
     self.userReminderSetup = []
     self.userReminderList = []
-    self.loop = asyncio.new_event_loop()
-    self.loop.create_task(self.checkDate)
-    self.loop.run_forever()
+    self.am = AsyncMethods(client)
 
   async def onMessage(self, message):
     await self.reminder_save_date(message)
@@ -36,7 +33,6 @@ class ReminderHandler(MessageHandler.MessageHandler):
     embed=discord.Embed(title=f"{msg.author.name}, enter your Date for notification.", color=0xbe8eb4)
     embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/1792/1792931.png')
     embed.add_field(name="Date format", value=f"yyyy-mm-dd hh:mm", inline=True)
-
     await msg.channel.send(embed=embed)
 
   async def reminder_save_date(self, msg):
@@ -64,25 +60,32 @@ class ReminderHandler(MessageHandler.MessageHandler):
           return
         
         self.userReminderList.append([msg.author, reminddate, i[1]])
+        self.am.updateReminderList(self.userReminderList)
         self.userReminderSetup.remove([i[0], i[1]])
 
         embed=discord.Embed(title="Reminder set", color=0xbe8eb4)
         embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/1792/1792931.png')
-        embed.add_field(name="Forget it", value="You will be reminded anyway :)", inline=True)
+        embed.add_field(name="Forget it", value="You will be reminded anyway :slight_smile:", inline=True)
         await msg.channel.send(embed=embed)
-  
-  async def checkDate(self):
-    await asyncio.sleep(1)
-    print("timer executed")
-    timezone_offset = 1
-    for i in self.userReminderList:
-      if (i[1] - (datetime.datetime.utcnow() + datetime.timedelta(hours=timezone_offset))).total_seconds() <= 0:
-        embed=discord.Embed(title="Reminder", color=0xbe8eb4)
-        embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/1792/1792931.png')
-        embed.add_field(name="Message", value=i[2], inline=True)
-        await i[0].send(embed=embed)
 
-class RepeatTimer(th.Timer):  
-    def run(self):  
-        while not self.finished.wait(self.interval):  
-            self.function(*self.args,**self.kwargs)
+class AsyncMethods():
+  def __init__(self, client):
+    self.userReminderList = []
+    client.loop.create_task(self.checkDate())
+
+  def updateReminderList(self, reminderList):
+    self.userReminderList = reminderList
+
+  async def checkDate(self):
+    while True:
+      await asyncio.sleep(1)
+      #print("timer check executed")
+      timezone_offset = 1
+      for i in self.userReminderList:
+        if (i[1] - (datetime.datetime.utcnow() + datetime.timedelta(hours=timezone_offset))).total_seconds() <= 0:
+          embed=discord.Embed(title="Reminder", color=0xbe8eb4)
+          embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/1792/1792931.png')
+          embed.add_field(name="Message", value=i[2], inline=True)
+          await i[0].send(embed=embed)
+
+          self.userReminderList.remove(i)
