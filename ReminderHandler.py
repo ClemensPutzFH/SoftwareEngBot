@@ -30,7 +30,7 @@ class ReminderHandler(MessageHandler.MessageHandler):
     self.userReminderSetup.append([msg.author.id, msg.content[9:]])
     print(self.userReminderSetup)
 
-    embed=discord.Embed(title=f"{msg.author.name}, enter your Date for notification.", color=0xbe8eb4)
+    embed=discord.Embed(title=f"{msg.author.display_name}, enter your Date for notification.", color=0xbe8eb4)
     embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/1792/1792931.png')
     embed.add_field(name="Date format", value=f"yyyy-mm-dd hh:mm", inline=True)
     await msg.channel.send(embed=embed)

@@ -55,14 +55,14 @@ class WeatherHandler(MessageHandler.MessageHandler):
         
     except:
       embed=discord.Embed(title="No response", color=0x14aaeb)
-      embed.add_field(name="Error", value="Oops!! Location not found  :white_frowning_face:", inline=True)
+      embed.add_field(name="Error", value="Oops! Location not found...  :white_frowning_face:", inline=True)
       return embed
 
   def weather_settings(self, msg):
     self.userChangeSettings.append(msg.author.id);
     #print(self.userChangeSettings);
     
-    embed=discord.Embed(title=f"{msg.author.name}, please enter your default location for weather updates", color=0x14aaeb)
+    embed=discord.Embed(title=f"{msg.author.display_name}, please enter your default location for weather updates", color=0x14aaeb)
     embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/975/975660.png')
 
     return embed
@@ -76,6 +76,6 @@ class WeatherHandler(MessageHandler.MessageHandler):
 
       self.userLocationSettings.update({msg.author.id: msgstring});
       #print(self.userLocationSettings)
-      embed=discord.Embed(title=f"{msg.author.name}, your default location was set to " + str(self.userLocationSettings.get(msg.author.id)), color=0x14aaeb)
+      embed=discord.Embed(title=f"{msg.author.display_name}, your default location was set to " + str(self.userLocationSettings.get(msg.author.id)), color=0x14aaeb)
       self.userChangeSettings.remove(msg.author.id)
       await msg.channel.send(embed=embed)
