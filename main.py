@@ -1,4 +1,3 @@
-import asyncio
 import discord
 import os
 from DiscordMessageProvider import DiscordMessageProvider
@@ -20,6 +19,7 @@ hh = HelpHandler()
 ch = CalculateHandler()
 rh = ReminderHandler(client)
 bj = BlackjackHandler()
+
 dmp.addMessageHandler(wh)
 dmp.addMessageHandler(jh)
 dmp.addMessageHandler(hh)
@@ -45,12 +45,7 @@ async def on_member_join(member):
     welcome_channel = discord.utils.get(guild.text_channels, position=0)
     #print(welcome_channel)
     await welcome_channel.send(f'Welcome to the {guild.name} Discord Server, {member.mention}!  :partying_face:')
-    await member.send(f'We are glad to have you in the {guild.name} Discord Server, {member.name}!  :partying_face:\nHere is a list of what I am capable of:\n\nUSe one of this commands in a textchannel on your Server\n\n!weather - get the latest weather information\n!blackjack - play a game of BlackJack\n!calculate "equation" - calculate a simple equation\n!remindme - get reminded\n!help - get more info about my functionality\n!joke - get an amazingly funny joke\n')
-
-async def test():
-  while True:
-    await asyncio.sleep(1)
-    print("lol")
+    await member.send(f'We are glad to have you in the {guild.name} Discord Server, {member.name}!  :partying_face:\nHere is a list of what I am capable of:\n\nUse one of this commands in a textchannel on your Server\n\n!weather \"location\" - get the latest weather information\n!blackjack - play a game of BlackJack\n!calc \"equation\" - calculate a simple equation\n!remindme \"message\" - get reminded\n!help - get more info about my functionality\n!joke - get an amazingly funny joke\n')
 
 my_secret = os.environ['tokenBot']
 client.run(my_secret)

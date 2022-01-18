@@ -2,7 +2,6 @@ import MessageHandler
 import discord
 from random import shuffle
 
-
 class BlackjackHandler(MessageHandler.MessageHandler):
     def __init__(self):
         self.usersStartingNewGame = []
@@ -65,7 +64,7 @@ class BlackjackHandler(MessageHandler.MessageHandler):
             self.userGameData.update({message.author.id: bjg})
             bjg.startGame()
             embed = discord.Embed(
-                title=f"Starting Hands (Player: {message.author.name})",
+                title=f"Starting Hands (Player: {message.author.display_name})",
                 color=0x65077f)
             embed.add_field(name="Dealers Hand",
                             value=bjg.dealerHandToString() + "\n Total:" +
@@ -78,6 +77,11 @@ class BlackjackHandler(MessageHandler.MessageHandler):
             embed.set_footer(text="Commands: !hit, !stand, !double, !credits")
             await message.channel.send(embed=embed)
             if bjg.evaluateGame(0) == 1:
+                self.userCredits.update({
+                    message.author.id:
+                    self.userCredits.get(message.author.id) +
+                    2 * bjg.getPlayerBet()
+                })
                 await self.playerVictory(message)
 
         if message.content.startswith(
@@ -99,7 +103,7 @@ class BlackjackHandler(MessageHandler.MessageHandler):
                                 value="He takes your credits, how rude",
                                 inline=True)
                 await message.channel.send(embed=embed)
-                self.userCredits.update({message.author.id: 0.0})
+                self.userCredits.update({message.author.id: 1.0})
                 await self.currentCredits(message)
 
         if message.content.startswith(
@@ -193,7 +197,7 @@ class BlackjackHandler(MessageHandler.MessageHandler):
     async def currentStandings(self, message):
         bjg = self.userGameData.get(message.author.id)
         embed = discord.Embed(
-            title=f"Current Standings (Player: {message.author.name})",
+            title=f"Current Standings (Player: {message.author.display_name})",
             color=0x65077f)
         embed.add_field(name="Dealers Hand",
                         value=bjg.dealerHandToString() + "\n Total:" +
@@ -207,7 +211,7 @@ class BlackjackHandler(MessageHandler.MessageHandler):
         await message.channel.send(embed=embed)
 
     async def playerVictory(self, message):
-        embed = discord.Embed(title="Player wins!", color=0x65077f)
+        embed = discord.Embed(title=f"{message.author.display_name} wins! ", color=0x65077f)
         embed.add_field(name="Victory!",
                         value="You have triumphed! :sunglasses:",
                         inline=True)
@@ -234,10 +238,11 @@ class BlackjackHandler(MessageHandler.MessageHandler):
         self.usersStartingNewGame.append(message.author.id)
 
     async def currentCredits(self, message):
-        embed = discord.Embed(title="Credit Balance", color=0x65077f)
+        embed = discord.Embed(title=f"Credit Balance (Player: {message.author.display_name})", color=0x65077f)
         embed.add_field(name="Your Credits",
                         value=f"{self.userCredits.get(message.author.id):.2f}",
                         inline=True)
+        embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/512/871/871569.png")
         await message.channel.send(embed=embed)
 
 

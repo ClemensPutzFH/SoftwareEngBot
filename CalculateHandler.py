@@ -32,7 +32,7 @@ class CalculateHandler(MessageHandler.MessageHandler):
 
     if len(calc_list) != 3:
       embed=discord.Embed(title="Error!", color=0x8A8A8A)
-      embed.add_field(name="Incorrect format", value="Please input calculation as \"!calc x + y\"", inline=True)
+      embed.add_field(name="Incorrect format", value="Please input calculation as \"!calc x + y\" or \"!calc x+y\"", inline=True)
       await message.channel.send(embed=embed)
       return
 
@@ -67,5 +67,5 @@ class CalculateHandler(MessageHandler.MessageHandler):
       await message.channel.send(embed=embed)
     else:
       embed=discord.Embed(title="Error!", color=0x8A8A8A)
-      embed.add_field(name="Incorrect format", value="Please input calculation as \"!calc x + y\"", inline=True)
+      embed.add_field(name="Incorrect format", value="Please input calculation as \"!calc x + y\" or \"!calc x+y\"", inline=True)
       await message.channel.send(embed=embed)

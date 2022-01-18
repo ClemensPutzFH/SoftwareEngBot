@@ -78,6 +78,7 @@ class AsyncMethods():
 
   async def checkDate(self):
     while True:
+      #TODO set sleep to 5min
       await asyncio.sleep(1)
       #print("timer check executed")
       timezone_offset = 1
